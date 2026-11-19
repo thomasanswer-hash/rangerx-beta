@@ -1,0 +1,55 @@
+statement_id,stage,abc,level,flexibility,statement,instrument_version
+RRX-001,Starting Off,Attentive,High,Flexible,I notice opportunities to start conversations with people who might benefit from my coaching.,range-universal-v0.1
+RRX-002,Starting Off,Attentive,High,Inflexible,I pay so much attention to whether it is a good moment to make contact that I often hold back from starting a conversation.,range-universal-v0.1
+RRX-003,Starting Off,Attentive,Medium,Flexible,I notice when there is a natural opportunity to start a conversation and choose an appropriate moment to do so.,range-universal-v0.1
+RRX-004,Starting Off,Attentive,Medium,Inflexible,"I hesitate to start conversations, even when there seems to be a good opportunity to make contact.",range-universal-v0.1
+RRX-005,Starting Off,Attentive,Low,Flexible,I am comfortable letting conversations arise naturally rather than actively looking for new ones.,range-universal-v0.1
+RRX-006,Starting Off,Attentive,Low,Inflexible,I stay focused on what I am already doing rather than looking for opportunities to start new conversations.,range-universal-v0.1
+RRX-007,Starting Off,Balanced,High,Flexible,I can introduce what I offer clearly when it is relevant to the conversation.,range-universal-v0.1
+RRX-008,Starting Off,Balanced,High,Inflexible,I bring up my coaching services before I have understood whether they are relevant to the person.,range-universal-v0.1
+RRX-009,Starting Off,Balanced,Medium,Flexible,I find natural opportunities to mention my coaching services as a conversation develops.,range-universal-v0.1
+RRX-010,Starting Off,Balanced,Medium,Inflexible,I overthink how to mention my coaching services and sometimes avoid mentioning them at all.,range-universal-v0.1
+RRX-011,Starting Off,Balanced,Low,Flexible,I am comfortable letting a conversation develop without actively steering it towards my coaching services.,range-universal-v0.1
+RRX-012,Starting Off,Balanced,Low,Inflexible,"I find it difficult to introduce my coaching services, even when there is a relevant opportunity to do so.",range-universal-v0.1
+RRX-013,Starting Off,Connected,High,Flexible,I put people at ease when I first start talking with them.,range-universal-v0.1
+RRX-014,Starting Off,Connected,High,Inflexible,I focus so much on being friendly that I avoid talking about the coaching support I offer.,range-universal-v0.1
+RRX-015,Starting Off,Connected,Medium,Flexible,I build a connection naturally as conversations get going.,range-universal-v0.1
+RRX-016,Starting Off,Connected,Medium,Inflexible,"I can become preoccupied with overcoming awkwardness, which makes it harder for me to connect naturally.",range-universal-v0.1
+RRX-017,Starting Off,Connected,Low,Flexible,I can keep an initial conversation straightforward and professional without needing to build a personal connection.,range-universal-v0.1
+RRX-018,Starting Off,Connected,Low,Inflexible,I can be so focused on the practical purpose of a conversation that I overlook opportunities to connect.,range-universal-v0.1
+RRX-019,Finding Out,Attentive,High,Flexible,I listen closely to what someone says and notice what matters most to them.,range-universal-v0.1
+RRX-020,Finding Out,Attentive,High,Inflexible,I focus so much on listening for every detail that I can lose sight of where the conversation needs to go.,range-universal-v0.1
+RRX-021,Finding Out,Attentive,Medium,Flexible,I listen for the main things someone wants to achieve and respond to what I hear.,range-universal-v0.1
+RRX-022,Finding Out,Attentive,Medium,Inflexible,I sometimes miss details that would help me understand what someone wants.,range-universal-v0.1
+RRX-023,Finding Out,Attentive,Low,Flexible,"I keep the conversation moving, drawing on the key things I hear as I go.",range-universal-v0.1
+RRX-024,Finding Out,Attentive,Low,Inflexible,I become so focused on what I want to say that I miss important things the other person tells me.,range-universal-v0.1
+RRX-025,Finding Out,Balanced,High,Flexible,"I use clear, purposeful questions to explore what someone wants to achieve.",range-universal-v0.1
+RRX-026,Finding Out,Balanced,High,Inflexible,I ask so many directed questions that I leave little room for the other person to explain things in their own way.,range-universal-v0.1
+RRX-027,Finding Out,Balanced,Medium,Flexible,I ask enough questions to understand what someone wants while keeping the conversation moving.,range-universal-v0.1
+RRX-028,Finding Out,Balanced,Medium,Inflexible,I rush to fill pauses rather than giving the other person time to think and respond.,range-universal-v0.1
+RRX-029,Finding Out,Balanced,Low,Flexible,I am comfortable letting the other person shape the conversation rather than taking the lead myself.,range-universal-v0.1
+RRX-030,Finding Out,Balanced,Low,Inflexible,I move into advice or solutions before I have properly explored what the other person wants or needs.,range-universal-v0.1
+RRX-031,Finding Out,Connected,High,Flexible,I make it easy for someone to talk openly about what matters to them.,range-universal-v0.1
+RRX-032,Finding Out,Connected,High,Inflexible,I focus so much on keeping the conversation comfortable that I avoid exploring things that may be harder to talk about.,range-universal-v0.1
+RRX-033,Finding Out,Connected,Medium,Flexible,I build enough connection for the conversation to move beyond basic facts and goals.,range-universal-v0.1
+RRX-034,Finding Out,Connected,Medium,Inflexible,I can struggle to build enough connection to explore what really matters to someone.,range-universal-v0.1
+RRX-035,Finding Out,Connected,Low,Flexible,I keep the conversation practical and professional without needing to explore things at a more personal level.,range-universal-v0.1
+RRX-036,Finding Out,Connected,Low,Inflexible,I tend to keep conversations at a surface level even when understanding more would be useful.,range-universal-v0.1
+RRX-037,Meeting Needs,Attentive,High,Flexible,I tailor my recommendation to what the person has told me.,range-universal-v0.1
+RRX-038,Meeting Needs,Attentive,High,Inflexible,I focus so much on finding the right recommendation that I hesitate to make a clear one.,range-universal-v0.1
+RRX-039,Meeting Needs,Attentive,Medium,Flexible,I explain how my recommendation connects to what the person wants to achieve.,range-universal-v0.1
+RRX-040,Meeting Needs,Attentive,Medium,Inflexible,I sometimes make a recommendation without clearly connecting it to what the person has told me.,range-universal-v0.1
+RRX-041,Meeting Needs,Attentive,Low,Flexible,I am comfortable recommending an approach I know works without tailoring every detail to the individual.,range-universal-v0.1
+RRX-042,Meeting Needs,Attentive,Low,Inflexible,I tend to recommend my preferred approach without checking how well it fits what the person has told me.,range-universal-v0.1
+RRX-043,Meeting Needs,Balanced,High,Flexible,I make a clear recommendation and invite the person to take a specific next step.,range-universal-v0.1
+RRX-044,Meeting Needs,Balanced,High,Inflexible,I push for a commitment before I have given the person enough space to decide.,range-universal-v0.1
+RRX-045,Meeting Needs,Balanced,Medium,Flexible,I make a recommendation and help the conversation move towards a next step without forcing the pace.,range-universal-v0.1
+RRX-046,Meeting Needs,Balanced,Medium,Inflexible,I can make the next step less clear by offering too many options.,range-universal-v0.1
+RRX-047,Meeting Needs,Balanced,Low,Flexible,I am comfortable presenting the options and leaving the person to decide what they want to do next.,range-universal-v0.1
+RRX-048,Meeting Needs,Balanced,Low,Inflexible,I avoid asking whether someone wants to take a clear next step with me.,range-universal-v0.1
+RRX-049,Meeting Needs,Connected,High,Flexible,I present my recommendation in a way that connects with what matters to the person.,range-universal-v0.1
+RRX-050,Meeting Needs,Connected,High,Inflexible,I focus so much on preserving the relationship that I avoid being direct about the next step.,range-universal-v0.1
+RRX-051,Meeting Needs,Connected,Medium,Flexible,I check how my recommendation lands with the person before discussing what happens next.,range-universal-v0.1
+RRX-052,Meeting Needs,Connected,Medium,Inflexible,I can become so focused on keeping things positive that I avoid checking for doubts or concerns about my recommendation.,range-universal-v0.1
+RRX-053,Meeting Needs,Connected,Low,Flexible,"I focus on explaining clearly what working with me would involve, without needing to build further personal connection.",range-universal-v0.1
+RRX-054,Meeting Needs,Connected,Low,Inflexible,I can be so focused on explaining what I offer that I overlook whether the person feels connected to it.,range-universal-v0.1
