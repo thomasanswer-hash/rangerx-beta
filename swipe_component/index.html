@@ -1,34 +1,356 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>
-*{box-sizing:border-box}body{margin:0;background:transparent;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
-#stage{position:relative;min-height:310px;display:flex;align-items:center;justify-content:center;padding:12px 16px 18px;touch-action:pan-y}
-#behind{position:absolute;inset:22px 30px 26px;background:#263032;border-radius:20px;transform:scale(.96)}
-#card{position:relative;width:100%;min-height:264px;border-radius:20px;background:#f5f5f2;color:#101516;padding:25px 25px 28px;box-shadow:0 16px 34px rgba(0,0,0,.3);cursor:grab;user-select:none;touch-action:none;transition:transform .18s ease,opacity .18s ease}
-#card:active{cursor:grabbing}.eyebrow{color:#5d6668;font-size:11px;font-weight:800;letter-spacing:.12em}
-#statement{font-weight:800;font-size:clamp(22px,4.6vw,32px);line-height:1.14;letter-spacing:-.035em;margin-top:20px;overflow-wrap:anywhere}
-#cue{position:absolute;top:17px;right:18px;color:#0b6b62;font-size:13px;font-weight:900;opacity:0;letter-spacing:.08em}
-#hint{text-align:center;color:#a9b4b4;font-size:12px;margin:0 0 12px}
-#legend{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 3px}
-#legend div{background:#22292b;color:#fff;border:1px solid #3b4648;border-radius:9px;text-align:center;padding:10px 2px;font-size:11px}
-#legend b{display:block;font-size:18px;color:#22c4b5;margin-bottom:3px}
-</style></head><body>
-<div id="stage"><div id="behind"></div><div id="card" role="group" aria-label="Swipe answer card">
-<div class="eyebrow" id="eyebrow"></div><div id="cue"></div><div id="statement"></div></div></div>
-<div id="hint">Drag in any direction, or use the buttons below</div>
-<div id="legend"><div><b>←</b>Never</div><div><b>↑</b>Sometimes</div><div><b>↓</b>Often</div><div><b>→</b>Always</div></div>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+  * { box-sizing:border-box; }
+  html, body {
+    margin:0;
+    padding:0;
+    background:transparent;
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color:#101516;
+    overflow:hidden;
+  }
+  .stage {
+    position:relative;
+    width:100%;
+    height:610px;
+    max-width:800px;
+    margin:0 auto;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
+  }
+  .card {
+    position:absolute;
+    width:min(500px, 66vw);
+    height:360px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid #e2e5e4;
+    border-radius:30px;
+    background:#f5f5f2;
+    box-shadow:0 4px 12px rgba(20,30,40,.10);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    cursor:grab;
+    will-change:transform,opacity;
+    z-index:3;
+  }
+  .card.dragging {
+    cursor:grabbing;
+    box-shadow:0 14px 35px rgba(20,30,40,.15);
+  }
+  .orb {
+    width:86px;
+    height:86px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(22,185,170,.12);
+    box-shadow:0 0 32px rgba(22,185,170,.18);
+    color:#16b9aa;
+    font-size:34px;
+    margin-bottom:28px;
+  }
+  .statement {
+    max-width:340px;
+    text-align:center;
+    font-size:25px;
+    line-height:1.35;
+    font-weight:600;
+    letter-spacing:-.025em;
+  }
+  .dir {
+    position:absolute;
+    z-index:2;
+    border:0;
+    background:transparent;
+    color:#e5e9e9;
+    font-size:17px;
+    font-weight:500;
+    cursor:pointer;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .dir:hover { color:#101516; }
+  .up { top:8px; left:50%; transform:translateX(-50%); flex-direction:column; gap:2px; }
+  .down { bottom:4px; left:50%; transform:translateX(-50%); flex-direction:column-reverse; gap:2px; }
+  .left { left:20px; top:50%; transform:translateY(-50%); }
+  .right { right:20px; top:50%; transform:translateY(-50%); }
+  .arrow { font-size:26px; line-height:1; }
+
+  .feedback {
+    position:absolute;
+    z-index:4;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:16px;
+    font-weight:700;
+    opacity:0;
+    display:none;
+    pointer-events:none;
+    background:#f5f5f2;
+    border:1px solid #e4e7ea;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+  .feedback.leftF { left:14%; top:48%; color:#087c73; }
+  .feedback.rightF { right:14%; top:48%; color:#087c73; }
+  .feedback.upF { left:50%; top:18%; transform:translateX(-50%); color:#087c73; }
+  .feedback.downF { left:50%; bottom:17%; transform:translateX(-50%); color:#087c73; }
+
+  @media (max-width:650px) {
+    .stage {
+      height:500px;
+      max-width:100%;
+    }
+    .card {
+      width:calc(100vw - 24px);
+      max-width:390px;
+      height:292px;
+      top:31%;
+      padding:22px 22px;
+      border-radius:26px;
+    }
+    .statement {
+      font-size:19px;
+      line-height:1.42;
+      max-width:320px;
+      font-weight:500;
+    }
+    .orb {
+      width:70px;
+      height:70px;
+      font-size:28px;
+      margin-bottom:20px;
+    }
+
+    .dir {
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+      border:1px solid #465154;
+      border-radius:15px;
+      background:#22292b;
+      color:#fff;
+      min-height:58px;
+      justify-content:center;
+      padding:6px 8px;
+    }
+    .arrow { font-size:22px; }
+
+    .up {
+      top:auto;
+      bottom:64px;
+      left:50%;
+      width:34%;
+      transform:translateX(-50%);
+      flex-direction:column;
+      gap:0;
+    }
+    .left {
+      left:0;
+      top:auto;
+      bottom:0;
+      width:32%;
+      transform:none;
+      flex-direction:column;
+      gap:0;
+    }
+    .down {
+      left:34%;
+      top:auto;
+      bottom:0;
+      width:32%;
+      transform:none;
+      flex-direction:column;
+      gap:0;
+    }
+    .right {
+      right:0;
+      top:auto;
+      bottom:0;
+      width:32%;
+      transform:none;
+      flex-direction:column;
+      gap:0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <button class="dir up" onclick="submitAnswer(2)" aria-label="Sometimes">
+    <span class="arrow">▲</span><span>Sometimes</span>
+  </button>
+  <button class="dir left" onclick="submitAnswer(1)" aria-label="Never">
+    <span class="arrow">◀</span><span>Never</span>
+  </button>
+  <button class="dir right" onclick="submitAnswer(4)" aria-label="Always">
+    <span>Always</span><span class="arrow">▶</span>
+  </button>
+  <button class="dir down" onclick="submitAnswer(3)" aria-label="Often">
+    <span class="arrow">▼</span><span>Often</span>
+  </button>
+
+  <div class="feedback leftF" id="leftF">Never</div>
+  <div class="feedback rightF" id="rightF">Always</div>
+  <div class="feedback upF" id="upF">Sometimes</div>
+  <div class="feedback downF" id="downF">Often</div>
+
+  <div class="card" id="card">
+    <div class="orb">✦</div>
+    <div class="statement" id="statement"></div>
+  </div>
+</div>
+
 <script>
-const card=document.getElementById("card"),cue=document.getElementById("cue");
-let origin=null, locked=false, data={};
-function send(type,payload){window.parent.postMessage(Object.assign({isStreamlitMessage:true,type},payload||{}),"*")}
-function resize(){send("streamlit:setFrameHeight",{height:document.documentElement.scrollHeight+8})}
-function direction(dx,dy){if(Math.max(Math.abs(dx),Math.abs(dy))<65)return null;
-if(Math.abs(dx)>Math.abs(dy))return dx<0?{v:1,t:"NEVER"}:{v:4,t:"ALWAYS"};
-return dy<0?{v:2,t:"SOMETIMES"}:{v:3,t:"OFTEN"}}
-function move(dx,dy){const d=direction(dx,dy);card.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/25}deg)`;cue.textContent=d?d.t:"";cue.style.opacity=d?1:0}
-card.addEventListener("pointerdown",e=>{if(locked)return;origin={x:e.clientX,y:e.clientY};card.setPointerCapture(e.pointerId);card.style.transition="none"});
-card.addEventListener("pointermove",e=>{if(!origin||locked)return;move(e.clientX-origin.x,e.clientY-origin.y)});
-card.addEventListener("pointerup",e=>{if(!origin||locked)return;let dx=e.clientX-origin.x,dy=e.clientY-origin.y;origin=null;const d=direction(dx,dy);card.style.transition="transform .22s ease,opacity .22s ease";if(d){locked=true;cue.textContent=d.t;cue.style.opacity=1;card.style.transform=`translate(${Math.sign(dx)*Math.max(Math.abs(dx),Math.abs(dy))*2}px,${Math.sign(dy)*Math.max(Math.abs(dx),Math.abs(dy))*2}px) rotate(${dx/15}deg)`;card.style.opacity="0";setTimeout(()=>send("streamlit:setComponentValue",{value:d.v}),180)}else{card.style.transform="";cue.style.opacity=0}});
-card.addEventListener("pointercancel",()=>{origin=null;card.style.transform="";cue.style.opacity=0});
-window.addEventListener("message",e=>{if(e.data.type==="streamlit:render"){const a=e.data.args||{};data=a;document.getElementById("statement").textContent=a.statement||"";document.getElementById("eyebrow").textContent=(a.stage||"").toUpperCase()+" · "+String(a.position||"").padStart(2,"0")+" / 54";locked=false;card.style.transform="";card.style.opacity=1;cue.style.opacity=0;resize()}});
-send("streamlit:componentReady",{apiVersion:1});resize();window.addEventListener("resize",resize);
-</script></body></html>
+const Streamlit = {
+  setComponentReady: function() {
+    window.parent.postMessage({
+      isStreamlitMessage: true,
+      type: "streamlit:componentReady",
+      apiVersion: 1
+    }, "*");
+  },
+  setFrameHeight: function(height) {
+    window.parent.postMessage({
+      isStreamlitMessage: true,
+      type: "streamlit:setFrameHeight",
+      height: height
+    }, "*");
+  },
+  setComponentValue: function(value) {
+    window.parent.postMessage({
+      isStreamlitMessage: true,
+      type: "streamlit:setComponentValue",
+      value: value,
+      dataType: "json"
+    }, "*");
+  }
+};
+
+const card = document.getElementById('card');
+const statementEl = document.getElementById('statement');
+
+let dragging = false;
+let startX = 0;
+let startY = 0;
+let dx = 0;
+let dy = 0;
+let submitted = false;
+const threshold = 110;
+
+function render(args) {
+  const statement = (args && args.statement) ? args.statement : "";
+  statementEl.textContent = statement;
+  Streamlit.setFrameHeight(window.innerWidth <= 650 ? 510 : 625);
+}
+
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if (!data || data.type !== "streamlit:render") return;
+  render(data.args || {});
+});
+
+function showFeedback(x, y) {
+  const ax = Math.abs(x), ay = Math.abs(y);
+  ['leftF','rightF','upF','downF'].forEach(id => document.getElementById(id).style.opacity = 0);
+  const strength = Math.min(1, Math.max(ax, ay) / threshold);
+
+  if (ax > ay) {
+    document.getElementById(x < 0 ? 'leftF' : 'rightF').style.opacity = strength;
+  } else {
+    document.getElementById(y < 0 ? 'upF' : 'downF').style.opacity = strength;
+  }
+}
+
+function moveCard(x, y) {
+  const rot = Math.max(-12, Math.min(12, x / 18));
+  card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rot}deg)`;
+  const dist = Math.hypot(x, y);
+  card.style.opacity = dist > 150 ? .72 : 1;
+  showFeedback(x, y);
+}
+
+function resetCard() {
+  card.style.transition = 'transform .28s cubic-bezier(.2,.8,.2,1), opacity .2s ease';
+  card.style.transform = 'translate(-50%,-50%) rotate(0deg)';
+  card.style.opacity = 1;
+  ['leftF','rightF','upF','downF'].forEach(id => document.getElementById(id).style.opacity = 0);
+  setTimeout(() => { card.style.transition = ''; }, 300);
+}
+
+function submitAnswer(score) {
+  if (submitted) return;
+  submitted = true;
+
+  let endX = 0, endY = 0;
+  if (score === 1) endX = -500;
+  if (score === 4) endX = 500;
+  if (score === 2) endY = -500;
+  if (score === 3) endY = 500;
+
+  card.style.transition = 'transform .24s ease-out, opacity .2s ease-out';
+  card.style.transform = `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px))`;
+  card.style.opacity = 0;
+
+  setTimeout(() => Streamlit.setComponentValue(score), 135);
+}
+
+card.addEventListener('pointerdown', (e) => {
+  if (submitted) return;
+  dragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  dx = 0;
+  dy = 0;
+  card.classList.add('dragging');
+  card.setPointerCapture(e.pointerId);
+});
+
+card.addEventListener('pointermove', (e) => {
+  if (!dragging || submitted) return;
+  dx = e.clientX - startX;
+  dy = e.clientY - startY;
+  moveCard(dx, dy);
+});
+
+card.addEventListener('pointerup', () => {
+  if (!dragging || submitted) return;
+  dragging = false;
+  card.classList.remove('dragging');
+
+  const ax = Math.abs(dx), ay = Math.abs(dy);
+
+  if (ax > ay && ax >= threshold) {
+    submitAnswer(dx < 0 ? 1 : 4);
+  } else if (ay >= threshold) {
+    submitAnswer(dy < 0 ? 2 : 3);
+  } else {
+    resetCard();
+  }
+});
+
+card.addEventListener('pointercancel', () => {
+  dragging = false;
+  card.classList.remove('dragging');
+  if (!submitted) resetCard();
+});
+
+Streamlit.setComponentReady();
+Streamlit.setFrameHeight(window.innerWidth <= 650 ? 510 : 625);
+</script>
+</body>
+</html>
