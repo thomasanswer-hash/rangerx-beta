@@ -1,5 +1,6 @@
 
 import csv
+import streamlit.components.v1 as components
 import re
 import sqlite3
 import uuid
@@ -27,6 +28,12 @@ p, label, .stMarkdown {color:#e5e9e9!important}
 .stButton button {border-radius:12px;min-height:3rem}
 [data-testid="stProgressBar"] div[role="progressbar"] {background:#16b9aa}
 hr{border-color:#273133}
+.stButton button[kind="secondary"]{background:#22292b!important;color:#fff!important;border:1px solid #465154!important}
+.stButton button[kind="secondary"] p{color:#fff!important}
+.stButton button[kind="primary"] p{color:#061512!important}
+.stButton button:disabled{opacity:.45!important}
+[data-testid="stHeading"] h1{font-size:clamp(1.7rem,5vw,2.5rem)!important}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -67,6 +74,7 @@ def load_items():
     assert all(x["instrument_version"]==INSTRUMENT for x in items)
     return items
 
+swipe_card = components.declare_component("rangerx_swipe", path=str(ROOT / "swipe_component"))
 init()
 items=load_items()
 if "assessment" not in st.session_state: st.session_state.assessment=None
@@ -117,8 +125,20 @@ else:
         item=items[pos]
         st.caption(f"{item['stage'].upper()} · {pos+1} OF 54")
         st.progress(len(answered)/54)
-        st.title(item["statement"])
-        st.write("How often does this sound like you?")
+        st.write("Swipe the card to answer — or tap an option below.")
+        swipe_result = swipe_card(
+            statement=item["statement"], stage=item["stage"],
+            position=pos+1, selected=answered.get(item["statement_id"], 0),
+            key=f"swipe_{aid}_{pos}", default=None
+        )
+        if swipe_result in (1,2,3,4):
+            with connect() as con:
+                con.execute("""INSERT INTO responses(assessment_id,statement_id,stage,score,updated_at)
+                    VALUES(?,?,?,?,?) ON CONFLICT(assessment_id,statement_id)
+                    DO UPDATE SET score=excluded.score,updated_at=excluded.updated_at""",
+                    (aid,item["statement_id"],item["stage"],int(swipe_result),now()))
+            st.session_state.position=min(pos+1,53)
+            st.rerun()
         options=[("Never",1),("Sometimes",2),("Often",3),("Always",4)]
         for label,value in options:
             if st.button(f"{label}  {'✓' if answered.get(item['statement_id'])==value else ''}",key=f"answer_{pos}_{value}",use_container_width=True,type="primary" if answered.get(item["statement_id"])==value else "secondary"):

@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;background:transparent;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+#stage{position:relative;min-height:310px;display:flex;align-items:center;justify-content:center;padding:12px 16px 18px;touch-action:pan-y}
+#behind{position:absolute;inset:22px 30px 26px;background:#263032;border-radius:20px;transform:scale(.96)}
+#card{position:relative;width:100%;min-height:264px;border-radius:20px;background:#f5f5f2;color:#101516;padding:25px 25px 28px;box-shadow:0 16px 34px rgba(0,0,0,.3);cursor:grab;user-select:none;touch-action:none;transition:transform .18s ease,opacity .18s ease}
+#card:active{cursor:grabbing}.eyebrow{color:#5d6668;font-size:11px;font-weight:800;letter-spacing:.12em}
+#statement{font-weight:800;font-size:clamp(22px,4.6vw,32px);line-height:1.14;letter-spacing:-.035em;margin-top:20px;overflow-wrap:anywhere}
+#cue{position:absolute;top:17px;right:18px;color:#0b6b62;font-size:13px;font-weight:900;opacity:0;letter-spacing:.08em}
+#hint{text-align:center;color:#a9b4b4;font-size:12px;margin:0 0 12px}
+#legend{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 3px}
+#legend div{background:#22292b;color:#fff;border:1px solid #3b4648;border-radius:9px;text-align:center;padding:10px 2px;font-size:11px}
+#legend b{display:block;font-size:18px;color:#22c4b5;margin-bottom:3px}
+</style></head><body>
+<div id="stage"><div id="behind"></div><div id="card" role="group" aria-label="Swipe answer card">
+<div class="eyebrow" id="eyebrow"></div><div id="cue"></div><div id="statement"></div></div></div>
+<div id="hint">Drag in any direction, or use the buttons below</div>
+<div id="legend"><div><b>←</b>Never</div><div><b>↑</b>Sometimes</div><div><b>↓</b>Often</div><div><b>→</b>Always</div></div>
+<script>
+const card=document.getElementById("card"),cue=document.getElementById("cue");
+let origin=null, locked=false, data={};
+function send(type,payload){window.parent.postMessage(Object.assign({isStreamlitMessage:true,type},payload||{}),"*")}
+function resize(){send("streamlit:setFrameHeight",{height:document.documentElement.scrollHeight+8})}
+function direction(dx,dy){if(Math.max(Math.abs(dx),Math.abs(dy))<65)return null;
+if(Math.abs(dx)>Math.abs(dy))return dx<0?{v:1,t:"NEVER"}:{v:4,t:"ALWAYS"};
+return dy<0?{v:2,t:"SOMETIMES"}:{v:3,t:"OFTEN"}}
+function move(dx,dy){const d=direction(dx,dy);card.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/25}deg)`;cue.textContent=d?d.t:"";cue.style.opacity=d?1:0}
+card.addEventListener("pointerdown",e=>{if(locked)return;origin={x:e.clientX,y:e.clientY};card.setPointerCapture(e.pointerId);card.style.transition="none"});
+card.addEventListener("pointermove",e=>{if(!origin||locked)return;move(e.clientX-origin.x,e.clientY-origin.y)});
+card.addEventListener("pointerup",e=>{if(!origin||locked)return;let dx=e.clientX-origin.x,dy=e.clientY-origin.y;origin=null;const d=direction(dx,dy);card.style.transition="transform .22s ease,opacity .22s ease";if(d){locked=true;cue.textContent=d.t;cue.style.opacity=1;card.style.transform=`translate(${Math.sign(dx)*Math.max(Math.abs(dx),Math.abs(dy))*2}px,${Math.sign(dy)*Math.max(Math.abs(dx),Math.abs(dy))*2}px) rotate(${dx/15}deg)`;card.style.opacity="0";setTimeout(()=>send("streamlit:setComponentValue",{value:d.v}),180)}else{card.style.transform="";cue.style.opacity=0}});
+card.addEventListener("pointercancel",()=>{origin=null;card.style.transform="";cue.style.opacity=0});
+window.addEventListener("message",e=>{if(e.data.type==="streamlit:render"){const a=e.data.args||{};data=a;document.getElementById("statement").textContent=a.statement||"";document.getElementById("eyebrow").textContent=(a.stage||"").toUpperCase()+" · "+String(a.position||"").padStart(2,"0")+" / 54";locked=false;card.style.transform="";card.style.opacity=1;cue.style.opacity=0;resize()}});
+send("streamlit:componentReady",{apiVersion:1});resize();window.addEventListener("resize",resize);
+</script></body></html>
